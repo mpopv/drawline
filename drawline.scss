@@ -1,0 +1,132 @@
+
+/*
+ * drawline
+ * --------
+ * LICENSE: MIT
+ */
+
+
+/*
+ * Searches and replaces all instances of a substring within a given string.
+ */
+@function str-replace($string, $search, $replace: '') {
+  $index: str-index($string, $search);
+  @if $index {
+    @return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+  }
+  @return $string;
+}
+
+
+/*
+ * URL encodes a string.
+ */
+@function url-encode($string) {
+  $map: (
+    "%": "%25",
+    "<": "%3C",
+    ">": "%3E",
+    " ": "%20",
+    "!": "%21",
+    "*": "%2A",
+    "'": "%27",
+    '"': "%22",
+    "(": "%28",
+    ")": "%29",
+    ";": "%3B",
+    ":": "%3A",
+    "@": "%40",
+    "&": "%26",
+    "=": "%3D",
+    "+": "%2B",
+    "$": "%24",
+    ",": "%2C",
+    "/": "%2F",
+    "?": "%3F",
+    "#": "%23",
+    "[": "%5B",
+    "]": "%5D"
+  );
+  $new: $string;
+  @each $search, $replace in $map {
+    $new: str-replace($new, $search, $replace);
+  }
+  @return $new;
+}
+
+
+/*
+ * Given an SVG string, urlencodes it and appends the appropriate syntax for it to be
+ * inlined as a data:image/svg+xml.
+ */
+@function inline-svg($string) {
+  @return url('data:image/svg+xml;charset=utf8,#{url-encode($string)}');
+}
+
+
+/*
+ * Splits a string into a list of characters.
+ */
+@function str-split($string) {
+  $chars-list: ();
+  $sum: str-length($string);
+  @for $i from 1 through $sum {
+    $chars-list: append($chars-list, str-slice($string, $i, $i));
+  }
+  @return $chars-list;
+}
+
+
+/*
+ * Main function -- takes a list of strings, color (optional), and mark (optional),
+ * and stroke width (optional), and returns a base64-encoded SVG ready to be set
+ * directly as a background image.
+ */
+@function drawline(
+  $list-of-strings,
+  $color: #000,
+  $mark: x,
+  $swidth: 10
+) {
+  // Set up points array
+  $points: ();
+  // Find length of string list and length of each string
+  $list-length: length($list-of-strings);
+  $stri-length: str-length(nth($list-of-strings, 1));
+  // All strings must have same length, or throw
+  @each $list in $list-of-strings {
+    @if (str-length($list) != $stri-length) {
+      @error "Strings of different lengths passed";
+    }
+  }
+  // 100 divided by each length produces units
+  // in each direction for plotting coords
+  $x-unit: 100 / $stri-length;
+  $y-unit: 100 / $list-length;
+  // Iterate over strings
+  @for $list-i from 1 through $list-length {
+    $current-string: nth($list-of-strings, $list-i);
+    $split-string: str-split($current-string);
+    // Iterate over chars within each string
+    @for $stri-i from 1 through $stri-length {
+      $current-char: nth($split-string, $stri-i);
+      // If this char is a mark, append a coord to the points array.
+      // Coords are formed by multiplying current index by each direction's unit.
+      @if (quote($current-char) == quote($mark)) {
+        $x: $stri-i * $x-unit - $x-unit / 2;
+        $y: $list-i * $y-unit - $y-unit / 2;
+        $points: append($points, '#{$x},#{$y}');
+      }
+    }
+  }
+  // Set up SVG
+  $svg: "<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100' preserveAspectRatio='xMidYMid slice'><polyline fill='transparent' stroke='" + $color + "' stroke-width='" + $swidth + "' stroke-linecap='round' points='";
+  // Concat each point
+  @each $point in $points {
+    $svg: $svg + " " + $point;
+  }
+  // Close SVG
+  $svg: $svg + "'/></svg>";
+  // Encode and return
+  @return inline-svg($svg);
+}
