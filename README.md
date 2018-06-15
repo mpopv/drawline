@@ -1,8 +1,8 @@
 # drawline
 
-A Sass mixin that lets you draw simple shapes with ASCII art, and generates an inline SVG background image.
+A Sass mixin that generates inline SVG background images by drawing simple shapes with an ASCII art syntax similar to `grid-template-areas`.
 
-⚠️ WIP ⚠️ -- Currently this will probably break when used for anything more complex than a single line or left- or right-facing chevron.
+⚠️ WIP ⚠️: Currently this will probably break when used for anything more complex than a single line or left- or right-facing chevron.
 
 # Installation
 
