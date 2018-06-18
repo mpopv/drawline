@@ -1,8 +1,6 @@
 # drawline
 
-A Sass mixin that generates inline SVG background images by drawing simple shapes with an ASCII art syntax similar to `grid-template-areas`.
-
-⚠️ WIP ⚠️: Currently this will probably break when used for anything more complex than a single line or left- or right-facing chevron.
+A Sass mixin that generate an inline SVG background images by drawing a line with an ASCII art syntax similar to `grid-template-areas`. Ideal for generating simple decorative shapes like chevrons or arrows.
 
 # Installation
 
@@ -18,12 +16,14 @@ npm i -D drawline
 // A right-facing chevron
 .right-chevron {
   background-image: drawline(
-    ('-x---'
+    ('-1---' // A Sass list of ASCII art strings
      '-----'
-     '---x-'
+     '---2-'
      '-----'
-     '-x---'),
-    #ff0000
+     '-3---'),
+    #ff0000, // The stroke color of the line
+    1,       // The stroke width of the line
+    false    // Whether the last point should connect to the first
   );
 }
 ```
