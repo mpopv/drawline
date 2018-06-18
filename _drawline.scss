@@ -88,37 +88,49 @@
   $mark: x,
   $swidth: 10
 ) {
+
   // Set up points array
   $points: ();
+  
   // Find length of string list and length of each string
   $list-length: length($list-of-strings);
   $stri-length: str-length(nth($list-of-strings, 1));
+  
   // All strings must have same length, or throw
   @each $list in $list-of-strings {
     @if (str-length($list) != $stri-length) {
       @error "Strings of different lengths passed";
     }
   }
+
   // 100 divided by each length produces units
   // in each direction for plotting coords
   $x-unit: 100 / $stri-length;
   $y-unit: 100 / $list-length;
-  // Iterate over strings
-  @for $list-i from 1 through $list-length {
-    $current-string: nth($list-of-strings, $list-i);
-    $split-string: str-split($current-string);
-    // Iterate over chars within each string
-    @for $stri-i from 1 through $stri-length {
-      $current-char: nth($split-string, $stri-i);
-      // If this char is a mark, append a coord to the points array.
-      // Coords are formed by multiplying current index by each direction's unit.
-      @if (quote($current-char) == quote($mark)) {
-        $x: $stri-i * $x-unit - $x-unit / 2;
-        $y: $list-i * $y-unit - $y-unit / 2;
-        $points: append($points, '#{$x},#{$y}');
+
+  // Iterate over strings, find each point, and append to points arrays
+  $last-retrieved-point: 0;
+  $currently-searched-for-point: 0;
+  @while ($currently-searched-for-point <= $last-retrieved-point) {
+    $currently-searched-for-point: $currently-searched-for-point + 1; 
+    @for $list-i from 1 through $list-length {
+      $current-string: nth($list-of-strings, $list-i);
+      $split-string: str-split($current-string);
+      // Iterate over chars within each string
+      @for $stri-i from 1 through $stri-length {
+        $current-char: nth($split-string, $stri-i);
+        // If this char is a mark, append a coord to the points array.
+        // Coords are formed by multiplying current index by each direction's unit.
+        @if (quote($current-char) == quote(inspect($currently-searched-for-point))) {
+          $x: $stri-i * $x-unit - $x-unit / 2;
+          $y: $list-i * $y-unit - $y-unit / 2;
+          $points: append($points, '#{$x},#{$y}');
+          $last-retrieved-point: $last-retrieved-point + 1;
+        }
       }
     }
   }
+
   // Set up SVG
   $svg: "<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100' preserveAspectRatio='xMidYMid slice'><polyline fill='transparent' stroke='" + $color + "' stroke-width='" + $swidth + "' stroke-linecap='square' stroke-linejoin='miter' points='";
   // Concat each point
