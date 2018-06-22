@@ -83,19 +83,21 @@
  * directly as a background image.
  */
 @function drawline(
-  $list-of-strings, // The set of ASCII art strings
-  $color: #000,   // The stroke color of the line
-  $swidth: 10,      // The width of the line
-  $connect: false   // Whether the last point should reconnect to the first (i.e. polyline vs polygon)
+  $list-of-strings,  // The set of ASCII art strings
+  $color: #000,      // The stroke color of the line
+  $swidth: 10,       // The stroke-width of the line
+  $slinejoin: miter, // The stroke-linejoin of the line
+  $slinecap: square, // The stroke-linecap of the line
+  $connect: false    // Whether the last point should reconnect to the first (i.e. polyline vs polygon)
 ) {
 
   // Set up points array
   $points: ();
-  
+
   // Find length of string list and length of each string
   $list-length: length($list-of-strings);
   $stri-length: str-length(nth($list-of-strings, 1));
-  
+
   // All strings must have same length, or throw
   @each $list in $list-of-strings {
     @if (str-length($list) != $stri-length) {
@@ -112,7 +114,7 @@
   $last-retrieved-point: 0;
   $currently-searched-for-point: 0;
   @while ($currently-searched-for-point <= $last-retrieved-point) {
-    $currently-searched-for-point: $currently-searched-for-point + 1; 
+    $currently-searched-for-point: $currently-searched-for-point + 1;
     @for $list-i from 1 through $list-length {
       $current-string: nth($list-of-strings, $list-i);
       $split-string: str-split($current-string);
@@ -137,7 +139,7 @@
   }
 
   // Set up SVG
-  $svg: "<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100' preserveAspectRatio='xMidYMid slice'><" + $element + " fill='transparent' stroke='" + $color + "' stroke-width='" + $swidth + "' stroke-linecap='square' stroke-linejoin='miter' points='";
+  $svg: "<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100' preserveAspectRatio='xMidYMid slice'><" + $element + " fill='transparent' stroke='" + $color + "' stroke-width='" + $swidth + "' stroke-linecap='" + $slinecap + "' stroke-linejoin='" + $slinejoin + "' points='";
   // Concat each point
   @each $point in $points {
     $svg: $svg + " " + $point;

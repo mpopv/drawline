@@ -21,9 +21,11 @@ npm i -D drawline
      '---2-'
      '-----'
      '-3---'),
-    #ff0000, // The stroke color of the line
-    1,       // The stroke width of the line
-    false    // Whether the last point should connect to the first
+    #000,    // The stroke color of the line
+    10,      // The stroke-width of the line (as a percent of the image width, because viewBox is `0 0 100 100`)
+    miter,   // The stroke-linejoin of the line
+    square,  // The stroke-linecap of the line
+    false    // Whether the last point should connect to the first (i.e. `<polyline>` or `<polygon>`)
   );
 }
 ```
