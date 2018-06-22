@@ -1,9 +1,9 @@
 {
   "name": "drawline",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "A Sass mixin that lets you draw a simple line, chevron, or arrow with ASCII art, and generates an inline SVG background image.",
   "main": "drawline.scss",
-  "scripts": { },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mpopv/drawline.git"
