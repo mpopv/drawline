@@ -25,7 +25,7 @@ npm i -D drawline
     10,      // The stroke-width of the line (as a percent of the image width, because viewBox is `0 0 100 100`)
     miter,   // The stroke-linejoin of the line
     square,  // The stroke-linecap of the line
-    false    // Whether the last point should connect to the first (i.e. `<polyline>` or `<polygon>`)
+    false    // Whether the last point should connect to the first (i.e. `<polyline>` vs `<polygon>`)
   );
 }
 ```
