@@ -2,6 +2,8 @@
 
 # drawline
 
+![npm](https://img.shields.io/npm/v/drawline) ![NPM](https://img.shields.io/npm/l/drawline) ![npm](https://img.shields.io/npm/dt/drawline)
+
 A Sass mixin that generates inline SVG background images by drawing a line with an ASCII art syntax. Ideal for generating simple decorative shapes like chevrons or arrows.
 
 Play with some examples: https://codepen.io/mpopv/pen/wXpgaL
